@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+
+<title>ControlCV</title>
+<meta HTTP-EQUIV="Refresh" CONTENT="600" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/x-icon" href="../imgs/favicon.ico" />
+<link rel="stylesheet" href="../css/stylecss.css" media="screen"
+	type="text/css" />
+
+</head>
+
+
+<body background="../imgs/soft_white_background.jpg">
+	<!--The content below is only a placeholder and can be replaced.-->
+	<table align="center">
+		<tr>
+			<td align="right" width="35%"><img
+				src="../imgs/logo_black_header.png" /></td>
+			<td align="center" width="65%"><h1>
+					<span th:text="${title_in_model}"></span>
+				</h1></td>
+		</tr>
+	</table>
+	<br />
+
+	<form action="#" th:action="@{/otherdate}" method="post"
+		th:object="${new_date}">
+		<input type="date" id="dateShow" th:field="*{newDate}"> </input> <input
+			type="submit" value="Ok" id="okButton"> </input>
+		<span th:text="${date}"></span>
+	</form>
+
+	<!-- <span th:text="${dir}"></span> -->
+	<br />
+	<br />
+
+	<div class="table100 ver1 m-b-110">
+		<table align="center" data-vertable="ver1">
+			<thead>
+				<tr>
+					<th align="center" width="3%">#</th>
+					<th align="center" width="7%"><span
+						th:text="${(title.date)[0]}"></span></th>
+					<th align="center" width="6%"><span
+						th:text="${title.process.codProcess}"></span></th>
+					<th align="center" width="8%"><span
+						th:text="${title.process.process}"></span></th>
+					<th align="center" width="20%"><span
+						th:text="${(title.interfaz)[0]}"></span></th>
+					<th align="center" width="7%"><span
+						th:text="${(title.time0)[0]}"></span></th>
+					<th align="center" width="7%"><span
+						th:text="${(title.time)[0]}"></span></th>
+					<th align="center" width="7%"><span
+						th:text="${(title.regsCTL)[0]}"></span></th>
+					<th align="center" width="7%"><span
+						th:text="${(title.regsIns)[0].dbname}"></span></th>
+					<th align="center" width="4%">Diffs</th>
+					<th align="center" width="4%">Cod</th>
+					<th align="center" width="15%">Descripcion</th>
+					<th align="center" width="5%"><span
+						th:text="${(title.state)[0]}"></span></th>
+				</tr>
+			</thead>
+			<!-- -->
+			<tbody>
+				<tr th:each="interfaz,i : ${processes}"
+					th:class="${i.even}? 'even_css_class':'odd_css_class'">
+					<td align="center"><span th:text="${interfaz.process.id}"></span></td>
+					<td align="center">
+						<div th:each="date1: ${interfaz.date}">
+							<span th:text="${date1}"></span>
+						</div>
+					</td>
+					<td align="center"><span
+						th:text="${interfaz.process.codProcess}"></span></td>
+					<td align="center"><span th:text="${interfaz.process.process}"></span></td>
+					<td align="center">
+						<div th:each="interfaz1: ${interfaz.interfaz}">
+							<span th:text="${interfaz1}"></span>
+						</div>
+					</td>
+					<td align="center">
+						<div th:each="time01: ${interfaz.time0}">
+							<span th:text="${time01}"></span>
+						</div>
+					</td>
+					<td align="center">
+						<div th:each="time1: ${interfaz.time}">
+							<span th:text="${time1}"></span>
+						</div>
+					</td>
+					<td align="center">
+						<div th:each="regsCTL1: ${interfaz.regsCTL}">
+							<span th:text="${regsCTL1}"></span>
+						</div>
+					</td>
+					<td align="center">
+						<span class="popup" > Regs db
+							<span class="popuptext" th:id="myPopup + ${i.index}">
+								<div th:each="db: ${interfaz.regsIns}">
+									<p id="foo"><span th:text="${db.dbname}"> - </span><span th:text="${db.dbinserts}"></span></p>
+								</div>
+							</span>
+						</span>
+						<!-- 
+						<span class="popup" (click)="myFunction(i)" > Regs db
+							<span class="popuptext" id="myPopup{{i}}">						ok
+								<div *ngFor="let db of interfaz.regsIns">					ok
+									<p id="foo">{{db.dbname}}	-	{{db.dbinserts}}</p>	ok
+								</div>														ok
+							</span>
+		  				</span>
+						 -->
+					</td>
+					<td align="center"><span class="red">-</span></td>
+					<td align="center">
+						<div th:each="state1: ${interfaz.state}">
+							<span th:text="${state1}"></span>
+						</div>
+					</td>
+					<td align="center">
+						<div th:each="descr1: ${interfaz.description}">
+							<span th:text="${descr1}"></span>
+						</div>
+					</td>
+					<td align="center">
+						<div th:each="imgs1: ${interfaz.imags}">
+							<img width="17" th:src="${imgs1}" />
+						</div>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+
+<br /><br /><br />
+<span class="ver">Version 1.0</span>
+</body>
+</html>
