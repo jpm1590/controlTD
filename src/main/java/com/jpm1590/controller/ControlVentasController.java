@@ -57,8 +57,8 @@ public class ControlVentasController {
 		mav.addObject("title_in_model", "Control Interfaces TD");
 		mav.addObject("title", controlVentasService.getTitles());
 		mav.addObject("processes", controlVentasService.getErrorsDesc(date));
-		mav.addObject("dir", controlVentasService.directorio());
-		
+		mav.addObject("ver_app", controlVentasService.versionApp());
+		mav.addObject("user_dir", System.getProperty("user.dir"));		
 		mav.addObject("date", date);
 
 		return mav;

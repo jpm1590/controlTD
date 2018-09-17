@@ -1,14 +1,24 @@
 package com.jpm1590.service.impl;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 import com.jpm1590.model.DbInserts;
 import com.jpm1590.model.ErrorNumber;
@@ -19,20 +29,26 @@ import com.jpm1590.service.ControlVentasService;
 @Service("controlVentasServiceImp")
 public class ControlVentasServiceImpl implements ControlVentasService {
 
+	@Value("${controlTD.process.uri}")
+	private String processURI;
+
 	private static final Log LOG = LogFactory.getLog(ControlVentasServiceImpl.class);
 
 	@Override
 	public List<ErrorNumber> getErrorNumbers() {
 
-		List<ErrorNumber> errno = new ArrayList<>();
+		URL errno = this.getClass().getClassLoader().getResource("static/data/errno");
+		List<ErrorNumber> errnos = new ArrayList<>();
 		try {
-			BufferedReader ent = new BufferedReader(new FileReader("src/main/resources/static/data/errno"));
+
+			BufferedReader ent = new BufferedReader(new FileReader(new File(errno.getFile())));
+
 			String linea = ent.readLine();
 
 			while (linea != null) {
 
 				String[] str = linea.split(",");
-				errno.add(new ErrorNumber(str[0], str[1]));
+				errnos.add(new ErrorNumber(str[0], str[1]));
 
 				linea = ent.readLine();
 			}
@@ -41,7 +57,7 @@ public class ControlVentasServiceImpl implements ControlVentasService {
 			LOG.debug(" - " + ioe);
 		}
 
-		return errno;
+		return errnos;
 	}
 
 	@Override
@@ -64,10 +80,11 @@ public class ControlVentasServiceImpl implements ControlVentasService {
 	@Override
 	public List<Interfaz> getAllProcess() {
 
+		URL process = this.getClass().getClassLoader().getResource("static/data/process");
 		List<Interfaz> processes = new ArrayList<>();
 		try {
 
-			BufferedReader ent = new BufferedReader(new FileReader("src/main/resources/static/data/process"));
+			BufferedReader ent = new BufferedReader(new FileReader(new File(process.getFile())));
 
 			String linea = ent.readLine();
 
@@ -94,6 +111,8 @@ public class ControlVentasServiceImpl implements ControlVentasService {
 
 	@Override
 	public List<Interfaz> getAllInterfaz(String date1) {
+
+		URL logs = this.getClass().getClassLoader().getResource("logs");
 		List<Interfaz> processes = new ArrayList<>();
 		processes = getAllProcess();
 
@@ -111,13 +130,13 @@ public class ControlVentasServiceImpl implements ControlVentasService {
 		try {
 
 			BufferedReader ent = new BufferedReader(
-					new FileReader("src/main/resources/logs/log_" + date1 + ".json"));
+					new FileReader(new File(logs.getFile()) + "/log_" + date1 + ".txt"));
 			String linea = ent.readLine();
 
 			while (linea != null) {
 
 				String[] str = linea.split(",");
-				
+
 				date = str[0].split(" ");
 				String[] strProcess = str[1].split("/");
 				process = new Process(strProcess[0], strProcess[1]);
@@ -202,7 +221,26 @@ public class ControlVentasServiceImpl implements ControlVentasService {
 	}
 
 	@Override
-	public String directorio() {
-		return System.getProperty("user.dir");
+	public String versionApp() {
+
+		final Properties properties = new Properties();
+		try {
+			properties.load(this.getClass().getClassLoader().getResourceAsStream("application.properties"));
+		} catch (IOException ioe) {
+			LOG.info(ioe);
+		}
+		return properties.getProperty("version");
 	}
+
+	public void myFunction(String i) throws Exception {
+		/*
+		 * var popup = document.getElementById("myPopup"+i);
+		 * popup.classList.toggle("show");
+		 * 
+		 * DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		 * Document doc = factory.newDocumentBuilder().parse( new InputSource(new
+		 * StringReader(""))); Element name = doc.getElementById("myPopup" + i);
+		 */
+	}
+
 }

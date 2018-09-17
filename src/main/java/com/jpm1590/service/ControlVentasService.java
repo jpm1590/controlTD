@@ -19,6 +19,6 @@ public interface ControlVentasService {
 	
 	public abstract List<Interfaz> getErrorsDesc(String date);
 	
-	public abstract String directorio();
+	public abstract String versionApp();
 	
 }
